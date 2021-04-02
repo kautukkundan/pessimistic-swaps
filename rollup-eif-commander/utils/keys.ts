@@ -1,7 +1,7 @@
-var { ethers } = require("ethers");
+import { ethers } from "ethers";
 
 // initialize secp256k1 algorithm
-var EC = require("elliptic").ec;
+import { ec as EC } from "elliptic";
 var ec = new EC("secp256k1");
 
 function createKeyPair() {
