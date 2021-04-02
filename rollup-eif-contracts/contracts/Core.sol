@@ -7,7 +7,7 @@ import { RollToken } from "./RollToken.sol";
 
 contract Core {
   AccountTree public accounts;
-  address underlying;
+  address public underlying;
 
   struct UserAccount {
     address userAddress;
@@ -15,21 +15,18 @@ contract Core {
     uint256 nonce;
   }
 
-  event AccountAdded(address account, uint256 amount, uint256 nonce);
-
   constructor() {
-    accounts = new AccountTree(4);
-    underlying = new RollToken(msg.sender);
+    accounts = new AccountTree();
+    RollToken underlyingToken = new RollToken(msg.sender);
+    underlying = address(underlyingToken);
   }
 
-  function deposit(bytes32[] proofs, uint256 _amount) external {
+  function deposit(uint256 _amount) external {
     UserAccount memory user = UserAccount(msg.sender, _amount, 0);
     IERC20(underlying).transferFrom(msg.sender, address(this), _amount);
 
     bytes32 leaf = keccak256(abi.encodePacked(user));
-    accounts.insertLeaf(proofs, leaf);
-
-    emit AccountAdded(msg.sender, _amount, 0);
+    accounts.insertLeaf(leaf);
   }
 
   // View Functions

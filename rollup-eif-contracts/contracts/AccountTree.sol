@@ -2,53 +2,58 @@
 pragma solidity >=0.7.0;
 
 contract AccountTree {
-  uint256 depth;
-  bytes32 public rootHash;
-  uint256 nextLeafIndex;
+  uint256 public constant DEPTH = 4;
+  uint256 internal nextLeafIndex = 0;
 
-  constructor(uint256 _depth) {
-    depth = _depth;
-    createRootHash(_depth);
-    nextLeafIndex = 0;
-  }
+  bytes32 public root;
 
-  function createRootHash(uint256 _depth) internal {
-    bytes32 firstZero =
+  bytes32[DEPTH] internal zeros;
+  bytes32[DEPTH] internal filledSubtrees;
+
+  event LeafInsertion(bytes32 indexed leaf, uint256 indexed leafIndex);
+
+  constructor() {
+    bytes32 zeroValue =
       0x0000000000000000000000000000000000000000000000000000000000000000;
-    bytes32 hash = firstZero;
+    zeros[0] = zeroValue;
 
-    for (uint256 i = 0; i < _depth; i++) {
-      hash = keccak256(abi.encodePacked(hash, hash));
+    bytes32 currentZero = zeroValue;
+
+    for (uint8 i = 1; i < DEPTH; i++) {
+      bytes32 hashed = keccak256(abi.encodePacked(currentZero, currentZero));
+      zeros[i] = hashed;
+      filledSubtrees[i] = hashed;
+      currentZero = hashed;
     }
 
-    rootHash = hash;
+    root = keccak256(abi.encodePacked(currentZero, currentZero));
   }
 
-  function insertLeaf(bytes32[] memory _proofs, bytes32 _leaf) external {
-    require(nextLeafIndex <= 2**depth, "account tree is full");
-    insertLeafAt(_proofs, _leaf, nextLeafIndex);
-    nextLeafIndex++;
-  }
+  function insertLeaf(bytes32 _leaf) external returns (uint256) {
+    uint256 currentIndex = nextLeafIndex;
+    bytes32 currentLevelHash = _leaf;
+    bytes32 left;
+    bytes32 right;
 
-  function insertLeafAt(
-    bytes32[] memory _proofs,
-    bytes32 _leaf,
-    uint256 index
-  ) internal {
-    bytes32 hash = _leaf;
-
-    for (uint256 i = 0; i < _proofs.length; i++) {
-      bytes32 proofElement = _proofs[i];
-
-      if (index % 2 == 0) {
-        hash = keccak256(abi.encodePacked(hash, proofElement));
+    for (uint8 i = 0; i < DEPTH; i++) {
+      if (currentIndex % 2 == 0) {
+        left = currentLevelHash;
+        right = zeros[i];
       } else {
-        hash = keccak256(abi.encodePacked(proofElement, hash));
+        left = filledSubtrees[i];
+        right = currentLevelHash;
       }
-
-      index = index / 2;
     }
 
-    rootHash = hash;
+    currentLevelHash = keccak256(abi.encodePacked(left, right));
+    currentIndex >>= 1;
+
+    root = currentLevelHash;
+    uint256 n = nextLeafIndex;
+    nextLeafIndex++;
+
+    emit LeafInsertion(_leaf, n);
+
+    return currentIndex;
   }
 }
