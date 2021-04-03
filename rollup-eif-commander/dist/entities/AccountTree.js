@@ -55,6 +55,7 @@ class MerkelTree {
     insertLeaf(proofs, leaf) {
         this.insertAt(proofs, leaf, this.nextLeafIndex);
         console.log("new leaf added: ", leaf);
+        this.nextLeafIndex += 1;
     }
     insertAt(proof, leaf, index) {
         let hash = leaf;
@@ -71,7 +72,6 @@ class MerkelTree {
             this.tree[i + 1][index] = hash;
         }
         this.rootHash = hash;
-        this.nextLeafIndex += 1;
         this.toJson();
     }
     toJson() {

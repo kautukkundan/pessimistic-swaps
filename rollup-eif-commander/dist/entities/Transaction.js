@@ -25,8 +25,10 @@ class Transaction {
     }
     updateStateTree(userFrom, userTo) {
         let proofsFrom = this.accountTree.getSiblings(this.from);
+        this.siblingsFrom = proofsFrom;
         this.accountTree.insertAt(proofsFrom, userFrom.toBytes(), this.from);
         let proofsTo = this.accountTree.getSiblings(this.to);
+        this.siblingsTo = proofsTo;
         this.accountTree.insertAt(proofsTo, userTo.toBytes(), this.to);
     }
     createSignature(userFrom) {
@@ -39,11 +41,17 @@ class Transaction {
             this.signature = signature;
         });
     }
+    getUserFrom() {
+        return this.database.getMemberFromStateId(this.from).user;
+    }
+    getUserTo() {
+        return this.database.getMemberFromStateId(this.from).user;
+    }
     execute() {
         return __awaiter(this, void 0, void 0, function* () {
             if (this.to <= this.database.length && this.from <= this.database.length) {
-                let userFrom = this.database.getMemberFromStateId(this.from).user;
-                let userTo = this.database.getMemberFromStateId(this.to).user;
+                let userFrom = this.getUserFrom();
+                let userTo = this.getUserTo();
                 if (userFrom.balance.gte(this.amount)) {
                     this.isValid = true;
                     userFrom.incrementNonce();

@@ -28,7 +28,6 @@ class DataStore {
         });
     }
     addMember(user) {
-        this.fromJson();
         this.userData.push({ user: user, stateId: this.length });
         this.length += 1;
         this.toJson();
