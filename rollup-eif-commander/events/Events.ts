@@ -13,7 +13,12 @@ class Events {
 
   newAccountRegistered = (address, balance, nonce) => {
     let newUser = new User(address, balance, nonce);
-    this.accountsTree.insertLeaf(newUser.toBytes());
+
+    let siblings = this.accountsTree.getSiblings(
+      this.accountsTree.nextLeafIndex
+    );
+
+    this.accountsTree.insertLeaf(siblings, newUser.toBytes());
     this.database.addMember(newUser);
   };
 }

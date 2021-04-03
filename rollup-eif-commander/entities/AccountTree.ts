@@ -12,8 +12,8 @@ class MerkelTree {
 
   tree: string[][];
 
-  constructor() {
-    this.DEPTH = 4;
+  constructor(depth: number) {
+    this.DEPTH = depth;
     this.leaves = [];
     this.rootHash = "";
     this.nextLeafIndex = 0;
@@ -67,10 +67,14 @@ class MerkelTree {
     return proofs;
   }
 
-  insertAt(proof: string[], leaf: string, index: number) {
-    console.log(`\n"${leaf}" inserted at index: "${index}"`);
-    let hash = leaf;
+  insertLeaf(proofs: string[], leaf: string) {
+    this.insertAt(proofs, leaf, this.nextLeafIndex);
+    this.nextLeafIndex += 1;
+    console.log("new leaf added: ", leaf);
+  }
 
+  insertAt(proof: string[], leaf: string, index: number) {
+    let hash = leaf;
     this.tree[this.DEPTH][index] = leaf;
 
     for (let i = 0; i < proof.length; i++) {
@@ -95,8 +99,6 @@ class MerkelTree {
       index = Math.floor(index / 2);
       this.tree[this.DEPTH][index] = hash;
     }
-
-    console.log(`new root hash : "${hash}"`);
 
     this.rootHash = hash;
   }

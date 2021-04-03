@@ -16,11 +16,15 @@ class User {
   }
 
   incrementNonce() {
-    this.nonce.add(ethers.BigNumber.from("1"));
+    this.nonce = this.nonce.add(ethers.BigNumber.from("1"));
   }
 
-  updateBalance(amount: ethers.BigNumber) {
-    this.balance = amount;
+  incrementBalance(amount: ethers.BigNumber) {
+    this.balance = this.balance.add(amount);
+  }
+
+  decrementBalance(amount: ethers.BigNumber) {
+    this.balance = this.balance.sub(amount);
   }
 
   toBytes() {

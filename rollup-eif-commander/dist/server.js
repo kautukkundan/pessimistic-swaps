@@ -20,7 +20,7 @@ const Events_1 = __importDefault(require("./events/Events"));
 let web3provider = new ethers_1.ethers.providers.JsonRpcProvider("http://127.0.0.1:8545/");
 let database = new datastore_1.default();
 database.initNew();
-let accountsTree = new AccountTree_1.default();
+let accountsTree = new AccountTree_1.default(4);
 let events = new Events_1.default(database, accountsTree);
 let RollupContractInstance = new ethers_1.ethers.Contract(Rollup_1.default.address, Rollup_1.default.abi, web3provider);
 console.log("Initialized Commander");

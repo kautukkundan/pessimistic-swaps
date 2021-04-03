@@ -11,7 +11,7 @@ let web3provider = new ethers.providers.JsonRpcProvider(
 let database = new DataStore();
 database.initNew();
 
-let accountsTree = new MerkelTree();
+let accountsTree = new MerkelTree(4);
 let events = new Events(database, accountsTree);
 
 let RollupContractInstance = new ethers.Contract(

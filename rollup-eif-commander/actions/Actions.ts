@@ -12,9 +12,10 @@ class Actions {
     await this.database.fromJson();
   }
 
-  transferTokens(to: number, from: number, amount: ethers.BigNumber) {
-    let tx = new Transaction(this.database, to, from, amount);
-    tx.execute();
+  async transferTokens(from: number, to: number, amount: ethers.BigNumber) {
+    let tx = new Transaction(this.database, from, to, amount);
+    let signature = await tx.execute();
+    return { txMsg: tx.toMessage(), txBytes: tx.toBytes(), signature };
   }
 }
 

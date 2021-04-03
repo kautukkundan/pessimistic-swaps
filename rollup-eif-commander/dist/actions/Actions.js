@@ -22,9 +22,12 @@ class Actions {
             yield this.database.fromJson();
         });
     }
-    transferTokens(to, from, amount) {
-        let tx = new Transaction_1.default(this.database, to, from, amount);
-        tx.execute();
+    transferTokens(from, to, amount) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let tx = new Transaction_1.default(this.database, from, to, amount);
+            let signature = yield tx.execute();
+            return { txMsg: tx.toMessage(), txBytes: tx.toBytes(), signature };
+        });
     }
 }
 exports.default = Actions;

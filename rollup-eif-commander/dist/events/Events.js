@@ -8,7 +8,8 @@ class Events {
     constructor(database, accountsTree) {
         this.newAccountRegistered = (address, balance, nonce) => {
             let newUser = new User_1.default(address, balance, nonce);
-            this.accountsTree.insertLeaf(newUser.toBytes());
+            let siblings = this.accountsTree.getSiblings(this.accountsTree.nextLeafIndex);
+            this.accountsTree.insertLeaf(siblings, newUser.toBytes());
             this.database.addMember(newUser);
         };
         this.database = database;
