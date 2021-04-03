@@ -15,11 +15,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ethers_1 = require("ethers");
 const sampleKeys_1 = __importDefault(require("../utils/sampleKeys"));
 class Transaction {
-    constructor(database, from, to, amount) {
+    constructor(database, accountTree, from, to, amount) {
         this.database = database;
         this.from = from;
         this.to = to;
         this.amount = amount;
+        this.accountTree = accountTree;
+        this.isValid = false;
+    }
+    updateStateTree(userFrom, userTo) {
+        let proofsFrom = this.accountTree.getSiblings(this.from);
+        this.accountTree.insertAt(proofsFrom, userFrom.toBytes(), this.from);
+        let proofsTo = this.accountTree.getSiblings(this.to);
+        this.accountTree.insertAt(proofsTo, userTo.toBytes(), this.to);
+    }
+    createSignature(userFrom) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let userFromPvtKey = sampleKeys_1.default.filter((key) => {
+                return key.address === userFrom.address;
+            })[0].secretHex;
+            let wallet = new ethers_1.ethers.Wallet(userFromPvtKey);
+            let signature = yield wallet.signMessage(this.toMessage());
+            this.signature = signature;
+        });
     }
     execute() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -27,18 +45,13 @@ class Transaction {
                 let userFrom = this.database.getMemberFromStateId(this.from).user;
                 let userTo = this.database.getMemberFromStateId(this.to).user;
                 if (userFrom.balance.gte(this.amount)) {
-                    let userFromPvtKey = sampleKeys_1.default.filter((key) => {
-                        return key.address === userFrom.address;
-                    })[0].secretHex;
+                    this.isValid = true;
                     userFrom.incrementNonce();
                     userFrom.decrementBalance(this.amount);
                     userTo.incrementBalance(this.amount);
-                    console.log(userFromPvtKey);
-                    console.log(this.toMessage());
-                    let wallet = new ethers_1.ethers.Wallet(userFromPvtKey);
-                    let signature = yield wallet.signMessage(this.toMessage());
+                    yield this.createSignature(userFrom);
+                    this.updateStateTree(userFrom, userTo);
                     this.database.toJson();
-                    return signature;
                 }
                 else {
                     throw Error("insufficient Balance for transfer");

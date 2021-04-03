@@ -59,7 +59,7 @@ class DataStore {
         stateId: element.stateId,
       });
     });
-    let dataJson = JSON.stringify(flattened);
+    let dataJson = JSON.stringify(flattened, null, 4);
     fs.writeFile(filename, dataJson, "utf8", () => {
       console.log("saved");
     });

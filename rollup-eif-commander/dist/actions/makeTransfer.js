@@ -17,8 +17,13 @@ const Actions_1 = __importDefault(require("./Actions"));
 let makeTransfer = () => __awaiter(void 0, void 0, void 0, function* () {
     let actions = new Actions_1.default();
     yield actions.loadDb();
-    let { txBytes, txMsg, signature } = yield actions.transferTokens(1, 0, ethers_1.ethers.BigNumber.from("5"));
-    console.log({ txBytes, txMsg, signature });
+    yield actions.loadTree();
+    let tx = yield actions.transferTokens(0, 1, ethers_1.ethers.BigNumber.from("5"));
+    console.log({
+        signature: tx.signature,
+        message: tx.toMessage(),
+        bytes: tx.toBytes(),
+    });
 });
 makeTransfer();
 //# sourceMappingURL=makeTransfer.js.map

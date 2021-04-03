@@ -12,6 +12,7 @@ let database = new DataStore();
 database.initNew();
 
 let accountsTree = new MerkelTree(4);
+
 let events = new Events(database, accountsTree);
 
 let RollupContractInstance = new ethers.Contract(

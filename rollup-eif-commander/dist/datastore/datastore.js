@@ -28,6 +28,7 @@ class DataStore {
         });
     }
     addMember(user) {
+        this.fromJson();
         this.userData.push({ user: user, stateId: this.length });
         this.length += 1;
         this.toJson();
@@ -52,7 +53,7 @@ class DataStore {
                 stateId: element.stateId,
             });
         });
-        let dataJson = JSON.stringify(flattened);
+        let dataJson = JSON.stringify(flattened, null, 4);
         fs.writeFile(filename, dataJson, "utf8", () => {
             console.log("saved");
         });

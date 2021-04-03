@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const datastore_1 = __importDefault(require("../datastore/datastore"));
+const AccountTree_1 = __importDefault(require("../entities/AccountTree"));
 const Transaction_1 = __importDefault(require("../entities/Transaction"));
 class Actions {
     constructor() { }
@@ -22,11 +23,17 @@ class Actions {
             yield this.database.fromJson();
         });
     }
+    loadTree() {
+        return __awaiter(this, void 0, void 0, function* () {
+            this.accountTree = new AccountTree_1.default(4);
+            yield this.accountTree.fromJson();
+        });
+    }
     transferTokens(from, to, amount) {
         return __awaiter(this, void 0, void 0, function* () {
-            let tx = new Transaction_1.default(this.database, from, to, amount);
-            let signature = yield tx.execute();
-            return { txMsg: tx.toMessage(), txBytes: tx.toBytes(), signature };
+            let tx = new Transaction_1.default(this.database, this.accountTree, from, to, amount);
+            yield tx.execute();
+            return tx;
         });
     }
 }

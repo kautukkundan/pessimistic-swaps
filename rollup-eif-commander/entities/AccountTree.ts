@@ -1,15 +1,12 @@
 import { ethers } from "ethers";
-
+var fs = require("fs");
+const path = require("path");
+let filename = path.join(__dirname, "accounttree.json");
 class MerkelTree {
   DEPTH: number;
   leaves: string[];
   rootHash: string;
   nextLeafIndex: number;
-
-  zeros: number[];
-  filledSubtrees: number[];
-  rootHistory: Map<number, boolean>;
-
   tree: string[][];
 
   constructor(depth: number) {
@@ -17,9 +14,6 @@ class MerkelTree {
     this.leaves = [];
     this.rootHash = "";
     this.nextLeafIndex = 0;
-    this.zeros = new Array<number>(this.DEPTH);
-    this.filledSubtrees = new Array<number>(this.DEPTH);
-    this.rootHistory = new Map();
     this.tree = [];
 
     this.createTree();
@@ -69,13 +63,12 @@ class MerkelTree {
 
   insertLeaf(proofs: string[], leaf: string) {
     this.insertAt(proofs, leaf, this.nextLeafIndex);
-    this.nextLeafIndex += 1;
     console.log("new leaf added: ", leaf);
   }
 
   insertAt(proof: string[], leaf: string, index: number) {
     let hash = leaf;
-    this.tree[this.DEPTH][index] = leaf;
+    this.tree[0][index] = leaf;
 
     for (let i = 0; i < proof.length; i++) {
       let proofElement = proof[i];
@@ -97,10 +90,38 @@ class MerkelTree {
       }
 
       index = Math.floor(index / 2);
-      this.tree[this.DEPTH][index] = hash;
+      this.tree[i + 1][index] = hash;
     }
 
     this.rootHash = hash;
+    this.nextLeafIndex += 1;
+    this.toJson();
+  }
+
+  toJson() {
+    let dataJson = JSON.stringify(
+      {
+        tree: this.tree,
+        next: this.nextLeafIndex,
+        rootHash: this.rootHash,
+        depth: this.DEPTH,
+      },
+      null,
+      4
+    );
+    fs.writeFile(filename, dataJson, "utf8", () => {
+      console.log("saved tree");
+    });
+  }
+
+  async fromJson() {
+    let jsonString = await fs.readFileSync(filename, "utf8");
+    let flattened = JSON.parse(jsonString);
+
+    this.tree = flattened.tree;
+    this.nextLeafIndex = flattened.next;
+    this.rootHash = flattened.rootHash;
+    this.DEPTH = flattened.depth;
   }
 }
 

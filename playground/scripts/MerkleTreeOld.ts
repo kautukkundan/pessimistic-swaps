@@ -107,7 +107,7 @@ class MerkelTree {
     console.log(`\n"${leaf}" inserted at index: "${index}"`);
     let hash = leaf;
 
-    this.tree[this.DEPTH][index] = leaf;
+    this.tree[0][index] = leaf;
 
     for (let i = 0; i < proof.length; i++) {
       let proofElement = proof[i];
@@ -129,7 +129,7 @@ class MerkelTree {
       }
 
       index = Math.floor(index / 2);
-      this.tree[this.DEPTH][index] = hash;
+      this.tree[i + 1][index] = hash;
     }
 
     console.log(`new root hash : "${hash}"`);
