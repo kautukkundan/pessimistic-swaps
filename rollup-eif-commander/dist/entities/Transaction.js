@@ -21,14 +21,17 @@ class Transaction {
         this.to = to;
         this.amount = amount;
         this.accountTree = accountTree;
-        this.isValid = false;
     }
     updateStateTree(userFrom, userTo) {
         let proofsFrom = this.accountTree.getSiblings(this.from);
         this.siblingsFrom = proofsFrom;
+        // console.log(proofsFrom);
+        // console.log(userFrom);
         this.accountTree.insertAt(proofsFrom, userFrom.toBytes(), this.from);
         let proofsTo = this.accountTree.getSiblings(this.to);
         this.siblingsTo = proofsTo;
+        // console.log(proofsTo);
+        // console.log(userTo);
         this.accountTree.insertAt(proofsTo, userTo.toBytes(), this.to);
     }
     createSignature(userFrom) {
@@ -45,7 +48,7 @@ class Transaction {
         return this.database.getMemberFromStateId(this.from).user;
     }
     getUserTo() {
-        return this.database.getMemberFromStateId(this.from).user;
+        return this.database.getMemberFromStateId(this.to).user;
     }
     execute() {
         return __awaiter(this, void 0, void 0, function* () {
@@ -53,7 +56,6 @@ class Transaction {
                 let userFrom = this.getUserFrom();
                 let userTo = this.getUserTo();
                 if (userFrom.balance.gte(this.amount)) {
-                    this.isValid = true;
                     userFrom.incrementNonce();
                     userFrom.decrementBalance(this.amount);
                     userTo.incrementBalance(this.amount);
@@ -73,12 +75,28 @@ class Transaction {
     toBytes() {
         let userFrom = this.database.getMemberFromStateId(this.from).user;
         let userTo = this.database.getMemberFromStateId(this.to).user;
-        return ethers_1.ethers.utils.defaultAbiCoder.encode(["address", "address", "uint256", "uint256"], [userFrom.address, userTo.address, this.amount, userFrom.nonce.add(1)]);
+        return ethers_1.ethers.utils.defaultAbiCoder.encode([
+            "uint256",
+            "address",
+            "uint256",
+            "uint256",
+            "uint256",
+            "address",
+            "uint256",
+            "uint256",
+        ], [
+            this.from,
+            userFrom.address,
+            userFrom.balance,
+            userFrom.nonce,
+            this.to,
+            userTo.address,
+            userTo.balance,
+            userTo.nonce,
+        ]);
     }
     toMessage() {
-        let userFrom = this.database.getMemberFromStateId(this.from).user;
-        let userTo = this.database.getMemberFromStateId(this.to).user;
-        return ethers_1.ethers.utils.keccak256(ethers_1.ethers.utils.defaultAbiCoder.encode(["address", "address", "uint256", "uint256"], [userFrom.address, userTo.address, this.amount, userFrom.nonce.add(1)]));
+        return ethers_1.ethers.utils.keccak256(this.toBytes());
     }
 }
 exports.default = Transaction;

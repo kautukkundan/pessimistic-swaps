@@ -2,25 +2,13 @@
     {
         "address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
         "balance": "10",
-        "nonce": "3",
+        "nonce": "2",
         "stateId": 0
     },
     {
         "address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
         "balance": "10",
-        "nonce": "0",
+        "nonce": "2",
         "stateId": 1
-    },
-    {
-        "address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-        "balance": "10",
-        "nonce": "1",
-        "stateId": 2
-    },
-    {
-        "address": "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
-        "balance": "10",
-        "nonce": "0",
-        "stateId": 3
     }
 ]

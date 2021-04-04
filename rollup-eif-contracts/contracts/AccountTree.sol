@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.7.0;
 
+import "hardhat/console.sol";
+
 contract AccountTree {
   uint256 depth;
   bytes32 public rootHash;
@@ -18,7 +20,7 @@ contract AccountTree {
     bytes32 hash = firstZero;
 
     for (uint256 i = 0; i < _depth; i++) {
-      hash = keccak256(abi.encodePacked(hash, hash));
+      hash = keccak256(abi.encode(hash, hash));
     }
 
     rootHash = hash;
@@ -34,20 +36,30 @@ contract AccountTree {
     bytes32[] memory _proofs,
     bytes32 _leaf,
     uint256 index
-  ) internal {
+  ) public {
     bytes32 hash = _leaf;
+
+    console.log("leaf");
+    console.logBytes32(_leaf);
+    console.logBytes32(_proofs[0]);
+    console.logBytes32(_proofs[1]);
+    console.logBytes32(_proofs[2]);
+    console.logBytes32(_proofs[3]);
 
     for (uint256 i = 0; i < _proofs.length; i++) {
       bytes32 proofElement = _proofs[i];
 
       if (index % 2 == 0) {
-        hash = keccak256(abi.encodePacked(hash, proofElement));
+        hash = keccak256(abi.encode(hash, proofElement));
       } else {
-        hash = keccak256(abi.encodePacked(proofElement, hash));
+        hash = keccak256(abi.encode(proofElement, hash));
       }
 
       index = index / 2;
     }
+
+    console.log("rootHash");
+    console.logBytes32(hash);
 
     rootHash = hash;
   }

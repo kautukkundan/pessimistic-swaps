@@ -11,6 +11,8 @@ class Events {
             let siblings = this.accountsTree.getSiblings(this.accountsTree.nextLeafIndex);
             this.accountsTree.insertLeaf(siblings, newUser.toBytes());
             this.database.addMember(newUser);
+            let siblingsNext = this.accountsTree.getSiblings(this.accountsTree.nextLeafIndex);
+            console.log({ siblingsNext });
         };
         this.database = database;
         this.accountsTree = accountsTree;

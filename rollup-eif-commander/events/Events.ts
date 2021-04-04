@@ -20,6 +20,11 @@ class Events {
 
     this.accountsTree.insertLeaf(siblings, newUser.toBytes());
     this.database.addMember(newUser);
+
+    let siblingsNext = this.accountsTree.getSiblings(
+      this.accountsTree.nextLeafIndex
+    );
+    console.log({ siblingsNext });
   };
 }
 

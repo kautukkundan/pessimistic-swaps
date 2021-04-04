@@ -11,7 +11,6 @@ class Transaction {
   database: DataStore;
   accountTree: MerkelTree;
   signature: string;
-  isValid: boolean;
   siblingsFrom: string[];
   siblingsTo: string[];
 
@@ -27,16 +26,23 @@ class Transaction {
     this.to = to;
     this.amount = amount;
     this.accountTree = accountTree;
-    this.isValid = false;
   }
 
   updateStateTree(userFrom: User, userTo: User) {
     let proofsFrom = this.accountTree.getSiblings(this.from);
     this.siblingsFrom = proofsFrom;
+
+    // console.log(proofsFrom);
+    // console.log(userFrom);
+
     this.accountTree.insertAt(proofsFrom, userFrom.toBytes(), this.from);
 
     let proofsTo = this.accountTree.getSiblings(this.to);
     this.siblingsTo = proofsTo;
+
+    // console.log(proofsTo);
+    // console.log(userTo);
+
     this.accountTree.insertAt(proofsTo, userTo.toBytes(), this.to);
   }
 
@@ -55,7 +61,7 @@ class Transaction {
   }
 
   getUserTo() {
-    return this.database.getMemberFromStateId(this.from).user;
+    return this.database.getMemberFromStateId(this.to).user;
   }
 
   async execute() {
@@ -64,7 +70,6 @@ class Transaction {
       let userTo = this.getUserTo();
 
       if (userFrom.balance.gte(this.amount)) {
-        this.isValid = true;
         userFrom.incrementNonce();
         userFrom.decrementBalance(this.amount);
         userTo.incrementBalance(this.amount);
@@ -86,21 +91,31 @@ class Transaction {
     let userTo = this.database.getMemberFromStateId(this.to).user;
 
     return ethers.utils.defaultAbiCoder.encode(
-      ["address", "address", "uint256", "uint256"],
-      [userFrom.address, userTo.address, this.amount, userFrom.nonce.add(1)]
+      [
+        "uint256",
+        "address",
+        "uint256",
+        "uint256",
+        "uint256",
+        "address",
+        "uint256",
+        "uint256",
+      ],
+      [
+        this.from,
+        userFrom.address,
+        userFrom.balance,
+        userFrom.nonce,
+        this.to,
+        userTo.address,
+        userTo.balance,
+        userTo.nonce,
+      ]
     );
   }
 
   toMessage() {
-    let userFrom = this.database.getMemberFromStateId(this.from).user;
-    let userTo = this.database.getMemberFromStateId(this.to).user;
-
-    return ethers.utils.keccak256(
-      ethers.utils.defaultAbiCoder.encode(
-        ["address", "address", "uint256", "uint256"],
-        [userFrom.address, userTo.address, this.amount, userFrom.nonce.add(1)]
-      )
-    );
+    return ethers.utils.keccak256(this.toBytes());
   }
 }
 
