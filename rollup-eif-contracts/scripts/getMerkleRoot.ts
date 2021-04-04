@@ -5,7 +5,7 @@ async function main() {
   let rollupAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
   let rollup = RollupContract.attach(rollupAddress);
 
-  let root = await rollup.merkleRoot();
+  let root = await rollup.rootL1();
   console.log(root);
 }
 

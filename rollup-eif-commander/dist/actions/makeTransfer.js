@@ -18,27 +18,43 @@ let makeTransfer = () => __awaiter(void 0, void 0, void 0, function* () {
     let actions = new Actions_1.default();
     yield actions.loadDb();
     yield actions.loadTree();
+    let initialState = [];
+    for (let i = 0; i <= actions.accountTree.nextLeafIndex; i++) {
+        let leaf = actions.accountTree.tree[0][i];
+        let siblings = actions.accountTree.getSiblings(i);
+        let stateId = i;
+        let bytes = ethers_1.ethers.utils.defaultAbiCoder.encode(["bytes32", "bytes32[]", "uint256"], [leaf, siblings, stateId]);
+        initialState.push(bytes);
+    }
+    let transferEvent = (from, to, amount) => __awaiter(void 0, void 0, void 0, function* () {
+        let tx = yield actions.transferTokens(from, to, ethers_1.ethers.BigNumber.from(amount));
+        let sig = ethers_1.ethers.utils.splitSignature(tx.signature);
+        let bytes = ethers_1.ethers.utils.defaultAbiCoder.encode([
+            "uint8",
+            "bytes32",
+            "bytes32",
+            "bytes",
+            "bytes32[]",
+            "bytes32[]",
+            "bytes32",
+        ], [
+            sig.v,
+            sig.r,
+            sig.s,
+            tx.toBytes(),
+            tx.siblingsFrom,
+            tx.siblingsTo,
+            tx.accountTree.rootHash,
+        ]);
+        return bytes;
+    });
     let txData = [];
-    let tx = yield actions.transferTokens(1, 0, ethers_1.ethers.BigNumber.from("1"));
-    let sig = ethers_1.ethers.utils.splitSignature(tx.signature);
-    let bytes = ethers_1.ethers.utils.defaultAbiCoder.encode([
-        "uint8",
-        "bytes32",
-        "bytes32",
-        "bytes",
-        "bytes32[]",
-        "bytes32[]",
-        "bytes32",
-    ], [
-        sig.v,
-        sig.r,
-        sig.s,
-        tx.toBytes(),
-        tx.siblingsFrom,
-        tx.siblingsTo,
-        tx.accountTree.rootHash,
-    ]);
-    txData.push(bytes);
+    txData.push(yield transferEvent(1, 0, 2));
+    //   txData.push(await transferEvent(0, 1, 3));
+    //   txData.push(await transferEvent(1, 0, 2));
+    //   txData.push(await transferEvent(0, 1, 3));
+    //   txData.push(await transferEvent(1, 0, 2));
+    console.log(initialState);
     console.log(txData);
 });
 makeTransfer();

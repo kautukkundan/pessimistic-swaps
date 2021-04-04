@@ -12,9 +12,9 @@ import "hardhat/console.sol";
 contract Rollup {
   AccountTree public accounts;
   address public underlying;
-  bytes32 public merkleRoot;
+  bytes32 public rootL1;
 
-  struct TxInfo {
+  struct L2Tx {
     uint256 fromStateId;
     address fromAddress;
     uint256 fromBalance;
@@ -25,66 +25,82 @@ contract Rollup {
     uint256 toNonce;
   }
 
+  struct Signature {
+    uint8 v;
+    bytes32 r;
+    bytes32 s;
+  }
+
+  struct AccountState {
+    bytes32 leaf;
+    bytes32[] siblings;
+    uint256 stateId;
+  }
+
   event AccountRegistered(address user, uint256 amount, uint256 nonce);
-  event BatchUpdate();
 
   constructor() {
     accounts = new AccountTree(4);
     RollToken underlyingToken = new RollToken(msg.sender);
     underlying = address(underlyingToken);
-    merkleRoot = accounts.rootHash();
+    rootL1 = accounts.rootHash();
   }
 
   function deposit(bytes32[] memory _proofs, uint256 _amount) external {
     IERC20(underlying).transferFrom(msg.sender, address(this), _amount);
     bytes32 leaf = keccak256(abi.encode(msg.sender, _amount, uint256(0)));
-
-    console.log(msg.sender, _amount, uint256(0));
-
     accounts.insertLeaf(_proofs, leaf);
-    merkleRoot = accounts.rootHash();
+    rootL1 = accounts.rootHash();
     emit AccountRegistered(msg.sender, _amount, 0);
   }
 
-  function generateTransactions(bytes[] calldata transactions) external {
-    uint8 v;
-    bytes32 r;
-    bytes32 s;
+  function applyTransactions(
+    bytes[] calldata _transactions,
+    bytes[] calldata _initialStates
+  ) external {
+    verifyInitialState(_initialStates);
 
+    Signature memory signature;
     bytes memory txData;
 
     bytes32[] memory siblingsFrom;
     bytes32[] memory siblingsTo;
 
-    bytes32 rootHash;
+    bytes32 rootL2;
 
-    for (uint8 i = 0; i < transactions.length; i++) {
-      (v, r, s, txData, siblingsFrom, siblingsTo, rootHash) = abi.decode(
-        transactions[i],
+    for (uint8 i = 0; i < _transactions.length; i++) {
+      (
+        signature.v,
+        signature.r,
+        signature.s,
+        txData,
+        siblingsFrom,
+        siblingsTo,
+        rootL2
+      ) = abi.decode(
+        _transactions[i],
         (uint8, bytes32, bytes32, bytes, bytes32[], bytes32[], bytes32)
       );
 
-      TxInfo memory txInfo = getDetailsFromTxData(txData);
+      L2Tx memory l2Tx = decodeL2tx(txData);
 
       //   Verifier verifier = new Verifier();
       //   address signer =
       //     verifier.verifyString(string(keccak256(txData)), v, r, s);
-      //   require(signer == txInfo.fromAddress, "invalid transaction");
+      //   require(signer == l2Tx.fromAddress, "invalid transaction");
 
       bytes32 leafFrom =
         keccak256(
-          abi.encode(txInfo.fromAddress, txInfo.fromBalance, txInfo.fromNonce)
+          abi.encode(l2Tx.fromAddress, l2Tx.fromBalance, l2Tx.fromNonce)
         );
-      accounts.insertLeafAt(siblingsFrom, leafFrom, txInfo.fromStateId);
+      accounts.insertLeafAt(siblingsFrom, leafFrom, l2Tx.fromStateId);
 
       bytes32 leafTo =
-        keccak256(
-          abi.encode(txInfo.toAddress, txInfo.toBalance, txInfo.toNonce)
-        );
-      accounts.insertLeafAt(siblingsTo, leafTo, txInfo.toStateId);
+        keccak256(abi.encode(l2Tx.toAddress, l2Tx.toBalance, l2Tx.toNonce));
+      accounts.insertLeafAt(siblingsTo, leafTo, l2Tx.toStateId);
 
-      require(rootHash == accounts.rootHash(), "invalid merkle proof");
-      merkleRoot = accounts.rootHash();
+      require(rootL2 == accounts.rootHash(), "invalid merkle proof");
+      rootL1 = accounts.rootHash();
     }
   }
 
@@ -93,13 +109,29 @@ contract Rollup {
     return address(accounts);
   }
 
-  // Pure Functions
-  function getDetailsFromTxData(bytes memory _txData)
+  function verifyInitialState(bytes[] calldata _initialStates)
     public
-    pure
-    returns (TxInfo memory)
+    view
+    returns (bool)
   {
-    TxInfo memory txInfo;
+    AccountState memory accountState;
+
+    for (uint256 i = 0; i < _initialStates.length; i++) {
+      accountState = decodeInitialState(_initialStates[i]);
+      bool isIncluded =
+        accounts.verifyInclusion(
+          accountState.siblings,
+          accountState.leaf,
+          accountState.stateId
+        );
+
+      require(isIncluded == true, "invalid initial state");
+    }
+  }
+
+  // Pure Functions
+  function decodeL2tx(bytes memory _txData) public pure returns (L2Tx memory) {
+    L2Tx memory txInfo;
 
     (
       txInfo.fromStateId,
@@ -116,5 +148,18 @@ contract Rollup {
     );
 
     return txInfo;
+  }
+
+  function decodeInitialState(bytes memory _initialStateBytes)
+    public
+    pure
+    returns (AccountState memory)
+  {
+    AccountState memory accountState;
+
+    (accountState.leaf, accountState.siblings, accountState.stateId) = abi
+      .decode(_initialStateBytes, (bytes32, bytes32[], uint256));
+
+    return accountState;
   }
 }
