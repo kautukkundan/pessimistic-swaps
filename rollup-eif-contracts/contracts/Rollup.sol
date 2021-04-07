@@ -25,6 +25,14 @@ contract Rollup {
     uint256 toNonce;
   }
 
+  struct L2Withdraw {
+    uint256 fromStateId;
+    address fromAddress;
+    uint256 fromBalance;
+    uint256 withdrawAmount;
+    uint256 fromNonce;
+  }
+
   struct Signature {
     uint8 v;
     bytes32 r;
@@ -52,6 +60,58 @@ contract Rollup {
     accounts.insertLeaf(_proofs, leaf);
     rootL1 = accounts.rootHash();
     emit AccountRegistered(msg.sender, _amount, 0);
+  }
+
+  function withdraw(
+    bytes[] calldata _transactions,
+    bytes[] calldata _initialStates
+  ) external {
+    verifyInitialState(_initialStates);
+
+    Signature memory signature;
+    bytes memory txData;
+
+    bytes32[] memory siblingsFrom;
+
+    bytes32 rootL2;
+
+    for (uint8 i = 0; i < _transactions.length; i++) {
+      (
+        signature.v,
+        signature.r,
+        signature.s,
+        txData,
+        siblingsFrom,
+        rootL2
+      ) = abi.decode(
+        _transactions[i],
+        (uint8, bytes32, bytes32, bytes, bytes32[], bytes32)
+      );
+
+      L2Withdraw memory l2Withdraw = decodeL2withdraw(txData);
+
+      //   Verifier verifier = new Verifier();
+      //   address signer =
+      //     verifier.verifyString(string(keccak256(txData)), v, r, s);
+      //   require(signer == l2Tx.fromAddress, "invalid transaction");
+
+      bytes32 leafFrom =
+        keccak256(
+          abi.encode(
+            l2Withdraw.fromAddress,
+            l2Withdraw.fromBalance,
+            l2Withdraw.fromNonce
+          )
+        );
+      accounts.insertLeafAt(siblingsFrom, leafFrom, l2Withdraw.fromStateId);
+      require(rootL2 == accounts.rootHash(), "invalid merkle proof");
+
+      rootL1 = accounts.rootHash();
+      IERC20(underlying).transfer(
+        l2Withdraw.fromAddress,
+        l2Withdraw.withdrawAmount
+      );
+    }
   }
 
   function applyTransactions(
@@ -130,6 +190,24 @@ contract Rollup {
   }
 
   // Pure Functions
+  function decodeL2withdraw(bytes memory _txData)
+    public
+    pure
+    returns (L2Withdraw memory)
+  {
+    L2Withdraw memory withdrawInfo;
+
+    (
+      withdrawInfo.fromStateId,
+      withdrawInfo.fromAddress,
+      withdrawInfo.fromBalance,
+      withdrawInfo.withdrawAmount,
+      withdrawInfo.fromNonce
+    ) = abi.decode(_txData, (uint256, address, uint256, uint256, uint256));
+
+    return withdrawInfo;
+  }
+
   function decodeL2tx(bytes memory _txData) public pure returns (L2Tx memory) {
     L2Tx memory txInfo;
 

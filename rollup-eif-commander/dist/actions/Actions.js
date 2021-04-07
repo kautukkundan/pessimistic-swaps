@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const datastore_1 = __importDefault(require("../datastore/datastore"));
 const AccountTree_1 = __importDefault(require("../entities/AccountTree"));
 const Transaction_1 = __importDefault(require("../entities/Transaction"));
+const Withdraw_1 = __importDefault(require("../entities/Withdraw"));
 class Actions {
     constructor() { }
     loadDb() {
@@ -32,6 +33,13 @@ class Actions {
     transferTokens(from, to, amount) {
         return __awaiter(this, void 0, void 0, function* () {
             let tx = new Transaction_1.default(this.database, this.accountTree, from, to, amount);
+            yield tx.execute();
+            return tx;
+        });
+    }
+    withdrawTokens(from, amount) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let tx = new Withdraw_1.default(this.database, this.accountTree, from, amount);
             yield tx.execute();
             return tx;
         });
