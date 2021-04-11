@@ -61,7 +61,7 @@ class DataStore {
     });
     let dataJson = JSON.stringify(flattened, null, 4);
     fs.writeFile(filename, dataJson, "utf8", () => {
-      console.log("saved");
+      console.log("saved db");
     });
   }
 

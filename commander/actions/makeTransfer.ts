@@ -59,14 +59,18 @@ let makeTransfer = async () => {
 
   let txData = [];
 
-  txData.push(await transferEvent(1, 0, 2));
-  //   txData.push(await transferEvent(0, 1, 3));
-  //   txData.push(await transferEvent(1, 0, 2));
-  //   txData.push(await transferEvent(0, 1, 3));
-  //   txData.push(await transferEvent(1, 0, 2));
+  txData.push(await transferEvent(0, 1, 200));
+  txData.push(await transferEvent(1, 2, 100));
+  txData.push(await transferEvent(2, 3, 50));
+  txData.push(await transferEvent(3, 4, 150));
+  txData.push(await transferEvent(4, 0, 100));
+  txData.push(await transferEvent(4, 1, 20));
+  txData.push(await transferEvent(4, 2, 60));
+  txData.push(await transferEvent(3, 0, 50));
+  txData.push(await transferEvent(2, 1, 100));
+  txData.push(await transferEvent(1, 4, 90));
 
-  console.log(initialState);
-  console.log(txData);
+  return { initialState, txData };
 };
 
-makeTransfer();
+export default makeTransfer;

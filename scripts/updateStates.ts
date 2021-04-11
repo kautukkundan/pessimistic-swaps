@@ -1,20 +1,17 @@
 // @ts-ignore
 import { ethers } from "hardhat";
-import getRootHash from "../dist/actions/getMerkleRoot";
+import makeTransfer from "../dist/actions/makeTransfer";
 
 async function main() {
+  let [owner, ...others] = await ethers.getSigners();
+
   let RollupContract = await ethers.getContractFactory("Rollup");
   let rollupAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
   let rollup = RollupContract.attach(rollupAddress);
 
-  // get root hash from rollup contract
-  let rootL1 = await rollup.rootL1();
+  let { initialState, txData } = await makeTransfer();
 
-  // get root has from Layer 2 commander
-  let rootL2 = await getRootHash();
-
-  console.log(`merkle root on L1 = ${rootL1}`);
-  console.log(`merkle root on L2 = ${rootL2}`);
+  await rollup.connect(owner).applyTransactions(txData, initialState);
 }
 
 main()

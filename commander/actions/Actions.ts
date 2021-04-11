@@ -35,6 +35,10 @@ class Actions {
   getNextSibling() {
     return this.accountTree.getSiblings(this.accountTree.nextLeafIndex);
   }
+
+  getMerkleRoot() {
+    return this.accountTree.rootHash;
+  }
 }
 
 export default Actions;

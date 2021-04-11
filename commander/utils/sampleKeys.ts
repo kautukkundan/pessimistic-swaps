@@ -2,47 +2,32 @@ let sampleKeys = [
   {
     secretHex:
       "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80",
-    pub: {
-      x: "42049dd7c86dfe266f36905e9f9261abbcbd3f7ddef62129a1dd6de71c0b7f73",
-      y: "4b127bec479a5ea15fd40bc943da4172f54ab506b45ae8c5264915b9ddc96b",
-    },
-    address: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+    address: "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
   },
   {
     secretHex:
-      "0xc9e44d58016914672914c9a8949c5a7bdfb9c1ef248b13bc5805b87f5f9d774a",
-    pub: {
-      x: "42049dd7c86dfe266f36905e9f9261abbcbd3f7ddef62129a1dd6de71c0b7f73",
-      y: "4b127bec479a5ea15fd40bc943da4172f54ab506b45ae8c5264915b9ddc96b",
-    },
-    address: "0x108477795d1aa2cc59bb3cf90705d5c87e9eb171",
+      "0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d",
+    address: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
   },
   {
     secretHex:
-      "0xc6a3916fe85e04ac10f5c162ff39753159a47ac5ca21414f318338831208bf40",
-    pub: {
-      x: "8354803729f12b4904b9e19feb5f8ed169b26d9e3f64a1ca909a7a181f91e03f",
-      y: "4e0a7cfb360ff695b36ede7a4c558795dbd3b2cea3920a6c75f9b76e452ae289",
-    },
-    address: "0x83a01499711a2513a2634f9cd67d11ab4b84e660",
+      "0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a",
+    address: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
   },
   {
     secretHex:
-      "0x3465281067460b6df3ade603154778650e8c497f1a6ecb5ac0bb08abb19536cc",
-    pub: {
-      x: "6f4c37ad3dfbab05db7230bccbd125b1f7584f08df5ab89c37f0d3e2320ff361",
-      y: "d179d2cf5c49c4b838bc37e36dd05420a32848fe93d7247ae855cfe301acce8b",
-    },
-    address: "0xf55dd373d3cbf92a8d4af049a94386616a1e6050",
+      "0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6",
+    address: "0x90F79bf6EB2c4f870365E785982E1f101E93b906",
   },
   {
     secretHex:
-      "0x0edb94461ad26f0cfe98e52a49fb9f7c9365b43a49c51a7885979d2ebb7fdf81",
-    pub: {
-      x: "b458c9fbc60d66e57aae8d027c23d65d2af1afdaf909a35d62e1f6a825fe8fe7",
-      y: "31f68ba1165d387e7374234144864284be7f4478dc1fcc9af8d44b0ba3303d17",
-    },
-    address: "0x601f2ab9f893fa987fbc809dc584230b2d080e2f",
+      "0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a",
+    address: "0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65",
+  },
+  {
+    secretHex:
+      "0x8b3a350cf5c34c9194ca85829a2df0ec3153be0318b5e2d3348e872092edffba",
+    address: "0x9965507D1a55bcC2695C58ba16FB37d819B0A4dc",
   },
 ];
 
