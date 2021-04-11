@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.7.0;
+pragma solidity >=0.6.6;
 pragma experimental ABIEncoderV2;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -47,14 +47,14 @@ contract Rollup {
 
   event AccountRegistered(address user, uint256 amount, uint256 nonce);
 
-  constructor() {
+  constructor() public {
     accounts = new AccountTree(4);
     RollToken underlyingToken = new RollToken(msg.sender);
     underlying = address(underlyingToken);
     rootL1 = accounts.rootHash();
   }
 
-  function deposit(bytes32[] memory _proofs, uint256 _amount) external {
+  function deposit(bytes32[] memory _proofs, uint256 _amount) public {
     IERC20(underlying).transferFrom(msg.sender, address(this), _amount);
     bytes32 leaf = keccak256(abi.encode(msg.sender, _amount, uint256(0)));
     accounts.insertLeaf(_proofs, leaf);
@@ -62,10 +62,9 @@ contract Rollup {
     emit AccountRegistered(msg.sender, _amount, 0);
   }
 
-  function withdraw(
-    bytes[] calldata _transactions,
-    bytes[] calldata _initialStates
-  ) external {
+  function withdraw(bytes[] memory _transactions, bytes[] memory _initialStates)
+    public
+  {
     verifyInitialState(_initialStates);
 
     Signature memory signature;
@@ -115,9 +114,9 @@ contract Rollup {
   }
 
   function applyTransactions(
-    bytes[] calldata _transactions,
-    bytes[] calldata _initialStates
-  ) external {
+    bytes[] memory _transactions,
+    bytes[] memory _initialStates
+  ) public {
     verifyInitialState(_initialStates);
 
     Signature memory signature;
@@ -169,7 +168,7 @@ contract Rollup {
     return address(accounts);
   }
 
-  function verifyInitialState(bytes[] calldata _initialStates)
+  function verifyInitialState(bytes[] memory _initialStates)
     public
     view
     returns (bool)

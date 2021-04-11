@@ -23,7 +23,7 @@ let makeTransfer = async () => {
     let tx = await actions.transferTokens(
       from,
       to,
-      ethers.BigNumber.from(amount)
+      ethers.utils.parseEther(amount.toString())
     );
     let sig = ethers.utils.splitSignature(tx.signature);
 
@@ -55,7 +55,7 @@ let makeTransfer = async () => {
     );
 
     console.log(
-      `ERC-20 TRANSFER | from stateID ${from} | to stateID ${to} | amount ${amount}`
+      `ERC-20 TRANSFER | from stateID ${from} | to stateID ${to} | amount ${amount} ethers`
     );
 
     return bytes;

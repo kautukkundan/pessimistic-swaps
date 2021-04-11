@@ -18,16 +18,16 @@ async function main() {
 
     await rollup
       .connect(signer)
-      .deposit(siblings, ethers.BigNumber.from("200"));
+      .deposit(siblings, ethers.utils.parseEther("200"));
 
     // add delay to wait for commander to append leaves
     // to merkle tree on L2 db before sending another address
     // console.log("waiting for 5 seconds");
+
+    await delay(5000);
     console.log(
       `${await signer.getAddress()} registered on Layer 2 successfully`
     );
-
-    await delay(5000);
   }
 }
 

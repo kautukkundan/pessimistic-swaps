@@ -20,7 +20,10 @@ let makeWithdraw = async () => {
   }
 
   let withdrawEvent = async (from: number, amount: number) => {
-    let tx = await actions.withdrawTokens(from, ethers.BigNumber.from(amount));
+    let tx = await actions.withdrawTokens(
+      from,
+      ethers.utils.parseEther(amount.toString())
+    );
     let sig = ethers.utils.splitSignature(tx.signature);
 
     let bytes = ethers.utils.defaultAbiCoder.encode(

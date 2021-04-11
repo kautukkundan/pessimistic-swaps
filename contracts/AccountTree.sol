@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.7.0;
+pragma solidity >=0.6.6;
 
 contract AccountTree {
   uint256 internal depth;
   bytes32 public rootHash;
   uint256 internal nextLeafIndex;
 
-  constructor(uint256 _depth) {
+  constructor(uint256 _depth) public {
     depth = _depth;
     createRootHash(_depth);
     nextLeafIndex = 0;
@@ -24,7 +24,7 @@ contract AccountTree {
     rootHash = hash;
   }
 
-  function insertLeaf(bytes32[] memory _proofs, bytes32 _leaf) external {
+  function insertLeaf(bytes32[] calldata _proofs, bytes32 _leaf) external {
     require(nextLeafIndex <= 2**depth, "account tree is full");
     insertLeafAt(_proofs, _leaf, nextLeafIndex);
     nextLeafIndex++;
@@ -54,7 +54,7 @@ contract AccountTree {
 
   // View Functions
   function verifyInclusion(
-    bytes32[] memory _proofs,
+    bytes32[] calldata _proofs,
     bytes32 _leaf,
     uint256 index
   ) external view returns (bool isIncluded) {
