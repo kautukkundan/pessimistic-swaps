@@ -1,1 +1,0 @@
-{"version":3,"file":"transferTokens.js","sourceRoot":"","sources":["../../actions/transferTokens.ts"],"names":[],"mappings":";;;;;AACA,0EAAkD;AAElD,IAAI,cAAc,GAAG,CACnB,EAAU,EACV,IAAY,EACZ,MAAwB,EACxB,WAA6B,EAC7B,EAAE;IACF,IAAI,EAAE,GAAG,IAAI,qBAAW,CAAC,EAAE,EAAE,IAAI,EAAE,MAAM,EAAE,WAAW,CAAC,CAAC;IACxD,kBAAkB;AACpB,CAAC,CAAC;AAEF,kBAAe,cAAc,CAAC"}

@@ -7,5 +7,6 @@
     "sourceMap": true,
     "outDir": "dist"
   },
+  "include": ["./commander/**/*"],
   "lib": ["es2015"]
 }
