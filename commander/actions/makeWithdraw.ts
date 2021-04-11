@@ -43,11 +43,11 @@ let makeWithdraw = async () => {
 
   let txData = [];
 
-  txData.push(await withdrawEvent(0, 150));
-  txData.push(await withdrawEvent(1, 330));
-  txData.push(await withdrawEvent(2, 210));
-  txData.push(await withdrawEvent(3, 50));
-  txData.push(await withdrawEvent(4, 110));
+  txData.push(await withdrawEvent(0, 275));
+  txData.push(await withdrawEvent(1, 185));
+  txData.push(await withdrawEvent(2, 205));
+  txData.push(await withdrawEvent(3, 110));
+  txData.push(await withdrawEvent(4, 225));
 
   return { initialState, txData };
 };

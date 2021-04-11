@@ -20,11 +20,11 @@ async function main() {
   // distribute ERC20 to 5 accounts
   await UnderlyingContract.connect(acc1).transfer(
     await acc2.getAddress(),
-    ethers.utils.parseEther("200")
+    ethers.utils.parseEther("50")
   );
   await UnderlyingContract.connect(acc2).transfer(
     await acc3.getAddress(),
-    ethers.utils.parseEther("100")
+    ethers.utils.parseEther("40")
   );
   await UnderlyingContract.connect(acc3).transfer(
     await acc4.getAddress(),
@@ -32,7 +32,7 @@ async function main() {
   );
   await UnderlyingContract.connect(acc4).transfer(
     await acc5.getAddress(),
-    ethers.utils.parseEther("150")
+    ethers.utils.parseEther("100")
   );
   await UnderlyingContract.connect(acc5).transfer(
     await acc1.getAddress(),
@@ -52,11 +52,52 @@ async function main() {
   );
   await UnderlyingContract.connect(acc3).transfer(
     await acc2.getAddress(),
-    ethers.utils.parseEther("100")
+    ethers.utils.parseEther("30")
   );
   await UnderlyingContract.connect(acc2).transfer(
     await acc5.getAddress(),
-    ethers.utils.parseEther("90")
+    ethers.utils.parseEther("70")
+  );
+
+  await UnderlyingContract.connect(acc1).transfer(
+    await acc2.getAddress(),
+    ethers.utils.parseEther("50")
+  );
+  await UnderlyingContract.connect(acc2).transfer(
+    await acc3.getAddress(),
+    ethers.utils.parseEther("40")
+  );
+  await UnderlyingContract.connect(acc3).transfer(
+    await acc4.getAddress(),
+    ethers.utils.parseEther("50")
+  );
+  await UnderlyingContract.connect(acc4).transfer(
+    await acc5.getAddress(),
+    ethers.utils.parseEther("20")
+  );
+  await UnderlyingContract.connect(acc5).transfer(
+    await acc1.getAddress(),
+    ethers.utils.parseEther("5")
+  );
+  await UnderlyingContract.connect(acc5).transfer(
+    await acc2.getAddress(),
+    ethers.utils.parseEther("5")
+  );
+  await UnderlyingContract.connect(acc5).transfer(
+    await acc3.getAddress(),
+    ethers.utils.parseEther("5")
+  );
+  await UnderlyingContract.connect(acc4).transfer(
+    await acc1.getAddress(),
+    ethers.utils.parseEther("20")
+  );
+  await UnderlyingContract.connect(acc3).transfer(
+    await acc2.getAddress(),
+    ethers.utils.parseEther("10")
+  );
+  await UnderlyingContract.connect(acc2).transfer(
+    await acc5.getAddress(),
+    ethers.utils.parseEther("30")
   );
 }
 

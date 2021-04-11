@@ -23,8 +23,8 @@ async function main() {
 
     // add delay to wait for commander to append leaves
     // to merkle tree on L2 db before sending another address
-    console.log("waiting for 7 seconds");
-    await delay(7000);
+    console.log("waiting for 5 seconds");
+    await delay(5000);
   }
 }
 
