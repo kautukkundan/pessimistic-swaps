@@ -12,6 +12,7 @@ let database = new DataStore();
 database.initNew();
 
 let accountsTree = new MerkelTree(4);
+accountsTree.toJson();
 
 let events = new Events(database, accountsTree);
 

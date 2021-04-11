@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-ethers": "^2.0.1",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@types/chai": "^4.2.15",
     "@types/mocha": "^8.2.2",
@@ -10,7 +10,7 @@
     "elliptic": "^6.5.4",
     "ethereum-waffle": "^3.3.0",
     "ethers": "^5.0.32",
-    "hardhat": "^2.1.1",
+    "hardhat": "^2.0.10",
     "prettier": "^2.2.1",
     "prettier-plugin-solidity": "^1.0.0-beta.7",
     "ts-node": "^9.1.1",

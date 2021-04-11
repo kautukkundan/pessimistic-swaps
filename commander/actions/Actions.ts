@@ -31,6 +31,10 @@ class Actions {
     await tx.execute();
     return tx;
   }
+
+  getNextSibling() {
+    return this.accountTree.getSiblings(this.accountTree.nextLeafIndex);
+  }
 }
 
 export default Actions;

@@ -62,9 +62,10 @@ class MerkelTree {
   }
 
   insertLeaf(proofs: string[], leaf: string) {
-    this.insertAt(proofs, leaf, this.nextLeafIndex);
-    console.log("new leaf added: ", leaf);
+    let insertAt = this.nextLeafIndex;
     this.nextLeafIndex += 1;
+    this.insertAt(proofs, leaf, insertAt);
+    console.log("new leaf added: ", leaf);
   }
 
   insertAt(proof: string[], leaf: string, index: number) {
