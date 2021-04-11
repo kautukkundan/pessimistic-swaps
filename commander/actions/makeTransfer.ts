@@ -54,6 +54,10 @@ let makeTransfer = async () => {
       ]
     );
 
+    console.log(
+      `ERC-20 TRANSFER | from stateID ${from} | to stateID ${to} | amount ${amount}`
+    );
+
     return bytes;
   };
 

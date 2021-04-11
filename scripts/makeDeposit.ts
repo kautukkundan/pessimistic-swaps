@@ -15,7 +15,6 @@ async function main() {
   // deposit ERC-20 from each account
   for await (const signer of [acc1, acc2, acc3, acc4, acc5]) {
     let siblings = await getNextSibling();
-    console.log(siblings);
 
     await rollup
       .connect(signer)
@@ -23,7 +22,11 @@ async function main() {
 
     // add delay to wait for commander to append leaves
     // to merkle tree on L2 db before sending another address
-    console.log("waiting for 5 seconds");
+    // console.log("waiting for 5 seconds");
+    console.log(
+      `${await signer.getAddress()} registered on Layer 2 successfully`
+    );
+
     await delay(5000);
   }
 }

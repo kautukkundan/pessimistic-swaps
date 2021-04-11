@@ -11,6 +11,7 @@ async function main() {
 
   let { initialState, txData } = await makeTransfer();
 
+  console.log("Applying transactions on-chain");
   await rollup.connect(owner).applyTransactions(txData, initialState);
 }
 

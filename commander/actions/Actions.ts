@@ -39,6 +39,11 @@ class Actions {
   getMerkleRoot() {
     return this.accountTree.rootHash;
   }
+
+  getBalanceOfUser(stateId: number) {
+    let user = this.database.getMemberFromStateId(stateId).user;
+    return { address: user.address, balance: user.balance };
+  }
 }
 
 export default Actions;

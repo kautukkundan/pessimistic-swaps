@@ -110,9 +110,7 @@ class MerkelTree {
       null,
       4
     );
-    fs.writeFile(filename, dataJson, "utf8", () => {
-      console.log("saved tree");
-    });
+    fs.writeFileSync(filename, dataJson, "utf8");
   }
 
   async fromJson() {
