@@ -44,6 +44,11 @@ class Actions {
     let user = this.database.getMemberFromStateId(stateId).user;
     return { address: user.address, balance: user.balance };
   }
+
+  getUserDetails(stateId: number) {
+    let user = this.database.getMemberFromStateId(stateId).user;
+    return { address: user.address, balance: user.balance, nonce: user.nonce };
+  }
 }
 
 export default Actions;
