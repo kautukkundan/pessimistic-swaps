@@ -19,7 +19,7 @@ export default {
   networks: {
     hardhat: {
       forking: {
-        url: "https://mainnet.infura.io/v3/0282bc486b5d475eb62ee8c307badf8c",
+        url: "https://mainnet.infura.io/v3/",
         blockNumber: 12221019,
       },
     },

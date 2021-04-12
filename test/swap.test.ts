@@ -54,7 +54,7 @@ describe("make deposit", function () {
 
     // // get quote
 
-    let amountEth2 = await exchange.getQuote(ethers.utils.parseEther("6.42"));
+    let amountEth2 = await exchange.getQuote(ethers.utils.parseEther("2140"));
     console.log(ethers.utils.formatEther(amountEth2));
   });
 });
