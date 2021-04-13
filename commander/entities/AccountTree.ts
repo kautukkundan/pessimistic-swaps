@@ -45,6 +45,16 @@ class MerkelTree {
     this.rootHash = currentLevel[0];
   }
 
+  resetTree() {
+    this.leaves = [];
+    this.rootHash = "";
+    this.nextLeafIndex = 0;
+    this.tree = [];
+
+    this.createTree();
+    this.toJson();
+  }
+
   getSiblings(index: number) {
     let proofs: string[] = [];
 

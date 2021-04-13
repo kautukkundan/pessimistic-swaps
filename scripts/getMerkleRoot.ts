@@ -4,7 +4,7 @@ import getRootHash from "../dist/actions/getMerkleRoot";
 
 async function main() {
   let RollupContract = await ethers.getContractFactory("Rollup");
-  let rollupAddress = "0x5FbDB2315678afecb367f032d93F642f64180aa3";
+  let rollupAddress = "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44";
   let rollup = RollupContract.attach(rollupAddress);
 
   // get root hash from rollup contract

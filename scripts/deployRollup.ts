@@ -6,10 +6,7 @@ async function main() {
   const rollup = await Rollup.deploy();
 
   await rollup.deployed();
-  console.log("Rollup deployed to:     ", rollup.address);
-
-  let underlying = await rollup.underlying();
-  console.log("Roll Tokens deployed at:", underlying);
+  console.log("Rollup deployed to:", rollup.address);
 }
 
 main()

@@ -1,5 +1,5 @@
 let Rollup = {
-  address: "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+  address: "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44",
   abi: [
     {
       inputs: [],
@@ -47,6 +47,11 @@ let Rollup = {
     {
       inputs: [
         {
+          internalType: "bytes32[]",
+          name: "_proofs",
+          type: "bytes32[]",
+        },
+        {
           internalType: "uint256",
           name: "_amount",
           type: "uint256",
@@ -71,15 +76,67 @@ let Rollup = {
       type: "function",
     },
     {
-      inputs: [],
-      name: "underlying",
-      outputs: [
+      inputs: [
         {
-          internalType: "address",
-          name: "",
-          type: "address",
+          internalType: "uint256",
+          name: "amountIn",
+          type: "uint256",
         },
       ],
+      name: "getQuote",
+      outputs: [
+        {
+          internalType: "uint256",
+          name: "",
+          type: "uint256",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "performSwap",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [],
+      name: "rootL1",
+      outputs: [
+        {
+          internalType: "bytes32",
+          name: "",
+          type: "bytes32",
+        },
+      ],
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "bytes[]",
+          name: "_initialStates",
+          type: "bytes[]",
+        },
+      ],
+      name: "swap",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      inputs: [
+        {
+          internalType: "bytes[]",
+          name: "_initialStates",
+          type: "bytes[]",
+        },
+      ],
+      name: "verifyInitialStateForSwap",
+      outputs: [],
       stateMutability: "view",
       type: "function",
     },

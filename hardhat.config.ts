@@ -19,8 +19,9 @@ export default {
   networks: {
     hardhat: {
       forking: {
-        url: "https://mainnet.infura.io/v3/",
-        blockNumber: 12221019,
+        url:
+          "https://eth-mainnet.alchemyapi.io/v2/lSj00SAfK4uYN4it_piDhoJOOqia7Pyb",
+        blockNumber: 12232904,
       },
     },
   },

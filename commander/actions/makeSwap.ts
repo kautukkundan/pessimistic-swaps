@@ -7,7 +7,8 @@ let makeSwap = async () => {
   await actions.loadTree();
 
   let initialStates: string[] = [];
-  for (let i = 0; i <= actions.accountTree.nextLeafIndex; i++) {
+
+  for (let i = 0; i < actions.accountTree.nextLeafIndex; i++) {
     let {
       address: userAddress,
       balance: userBalance,
@@ -24,7 +25,10 @@ let makeSwap = async () => {
     initialStates.push(bytes);
   }
 
-  return { initialStates };
+  actions.accountTree.resetTree();
+  actions.database.resetDB();
+
+  return initialStates;
 };
 
 export default makeSwap;

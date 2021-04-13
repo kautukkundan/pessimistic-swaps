@@ -25,6 +25,12 @@ class DataStore {
     this.length = 0;
   }
 
+  resetDB() {
+    this.userData = [];
+    this.length = 0;
+    this.toJson();
+  }
+
   initNew() {
     fs.writeFileSync(filename, JSON.stringify([]), "utf8", () => {
       console.log("saved");

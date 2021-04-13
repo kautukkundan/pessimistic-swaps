@@ -1,4 +1,5 @@
 import Actions from "./Actions";
+import { ethers } from "ethers";
 
 let getBalances = async () => {
   let actions = new Actions();
@@ -9,7 +10,11 @@ let getBalances = async () => {
 
   for (let i = 0; i < n_users; i++) {
     let details = actions.getBalanceOfUser(i);
-    console.log(`address : ${details.address} | balance ${details.balance}`);
+    console.log(
+      `address : ${details.address} | balance ${ethers.utils.formatEther(
+        details.balance
+      )}`
+    );
   }
 };
 
