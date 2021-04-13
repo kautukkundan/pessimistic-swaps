@@ -24,12 +24,11 @@ contract Rollup {
   struct AccountStateSwap {
     address payable userAddress;
     uint256 balance;
-    uint256 nonce;
     bytes32[] siblings;
     uint256 stateId;
   }
 
-  event AccountRegistered(address user, uint256 amount, uint256 nonce);
+  event AccountRegistered(address user, uint256 amount);
 
   constructor() public {
     accounts = new AccountTree(4);
@@ -40,10 +39,10 @@ contract Rollup {
 
   function deposit(bytes32[] memory _proofs, uint256 _amount) public {
     IERC20(dai).transferFrom(msg.sender, address(this), _amount);
-    bytes32 leaf = keccak256(abi.encode(msg.sender, _amount, uint256(0)));
+    bytes32 leaf = keccak256(abi.encode(msg.sender, _amount));
     accounts.insertLeaf(_proofs, leaf);
     rootL1 = accounts.rootHash();
-    emit AccountRegistered(msg.sender, _amount, 0);
+    emit AccountRegistered(msg.sender, _amount);
   }
 
   function swap(bytes[] memory _initialStates) public {
@@ -53,10 +52,9 @@ contract Rollup {
     AccountStateSwap memory accountStateSwap;
 
     for (uint256 i = 0; i < _initialStates.length; i++) {
-      (accountStateSwap.userAddress, accountStateSwap.balance, , , ) = abi
-        .decode(
+      (accountStateSwap.userAddress, accountStateSwap.balance, , ) = abi.decode(
         _initialStates[i],
-        (address, uint256, uint256, bytes32[], uint256)
+        (address, uint256, bytes32[], uint256)
       );
 
       uint256 accountShare = getQuote(accountStateSwap.balance);
@@ -102,21 +100,13 @@ contract Rollup {
       (
         accountStateSwap.userAddress,
         accountStateSwap.balance,
-        accountStateSwap.nonce,
         accountStateSwap.siblings,
         accountStateSwap.stateId
-      ) = abi.decode(
-        _initialStates[i],
-        (address, uint256, uint256, bytes32[], uint256)
-      );
+      ) = abi.decode(_initialStates[i], (address, uint256, bytes32[], uint256));
 
       bytes32 leaf =
         keccak256(
-          abi.encode(
-            accountStateSwap.userAddress,
-            accountStateSwap.balance,
-            accountStateSwap.nonce
-          )
+          abi.encode(accountStateSwap.userAddress, accountStateSwap.balance)
         );
 
       bool isIncluded =

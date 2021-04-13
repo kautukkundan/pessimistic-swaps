@@ -12,7 +12,6 @@ interface DataRow {
 interface IFlattened {
   address: string;
   balance: ethers.BigNumber;
-  nonce: ethers.BigNumber;
   stateId: number;
 }
 
@@ -61,7 +60,6 @@ class DataStore {
       flattened.push({
         address: element.user.address,
         balance: element.user.balance.toString(),
-        nonce: element.user.nonce.toString(),
         stateId: element.stateId,
       });
     });
@@ -75,11 +73,7 @@ class DataStore {
     let unflattened: DataRow[] = [];
     flattened.forEach((element) => {
       unflattened.push({
-        user: new User(
-          element.address,
-          ethers.BigNumber.from(element.balance),
-          ethers.BigNumber.from(element.nonce)
-        ),
+        user: new User(element.address, ethers.BigNumber.from(element.balance)),
         stateId: element.stateId,
       });
     });

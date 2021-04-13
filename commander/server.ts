@@ -24,9 +24,6 @@ let RollupContractInstance = new ethers.Contract(
 
 console.log("Initialized Commander");
 
-RollupContractInstance.on(
-  "AccountRegistered",
-  async (address, balance, nonce) => {
-    events.newAccountRegistered(address, balance, nonce);
-  }
-);
+RollupContractInstance.on("AccountRegistered", async (address, balance) => {
+  events.newAccountRegistered(address, balance);
+});

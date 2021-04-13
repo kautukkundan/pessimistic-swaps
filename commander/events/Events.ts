@@ -11,8 +11,8 @@ class Events {
     this.accountsTree = accountsTree;
   }
 
-  newAccountRegistered = (address, balance, nonce) => {
-    let newUser = new User(address, balance, nonce);
+  newAccountRegistered = (address, balance) => {
+    let newUser = new User(address, balance);
 
     let siblings = this.accountsTree.getSiblings(
       this.accountsTree.nextLeafIndex

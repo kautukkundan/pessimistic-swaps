@@ -21,12 +21,6 @@ let Rollup = {
           name: "amount",
           type: "uint256",
         },
-        {
-          indexed: false,
-          internalType: "uint256",
-          name: "nonce",
-          type: "uint256",
-        },
       ],
       name: "AccountRegistered",
       type: "event",
@@ -139,6 +133,10 @@ let Rollup = {
       outputs: [],
       stateMutability: "view",
       type: "function",
+    },
+    {
+      stateMutability: "payable",
+      type: "receive",
     },
   ],
 };
