@@ -13,8 +13,6 @@ import {
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { AccountTree } from "./AccountTree.sol";
 
-import "hardhat/console.sol";
-
 contract Rollup {
   AccountTree public accounts;
   bytes32 public rootL1;
@@ -50,9 +48,6 @@ contract Rollup {
 
   function swap(bytes[] memory _initialStates) public {
     verifyInitialStateForSwap(_initialStates);
-
-    console.log("verified");
-
     performSwap();
 
     AccountStateSwap memory accountStateSwap;
@@ -65,17 +60,13 @@ contract Rollup {
       );
 
       uint256 accountShare = getQuote(accountStateSwap.balance);
-      console.log(accountShare);
       accountStateSwap.userAddress.transfer(accountShare);
     }
   }
 
   function performSwap() public {
     uint256 contractBalance = IERC20(dai).balanceOf(address(this));
-    console.log("contract Balance", contractBalance);
-
     IERC20(dai).approve(address(router), contractBalance);
-    console.log("DAI Approval given");
 
     address[] memory path = new address[](2);
     path[0] = dai;
@@ -87,10 +78,6 @@ contract Rollup {
       address(this),
       block.timestamp
     );
-
-    uint256 ethBalance = address(this).balance;
-    console.log("eth balance", ethBalance);
-    console.log("Swap Complete");
   }
 
   function getQuote(uint256 amountIn) public view returns (uint256) {

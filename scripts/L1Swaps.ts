@@ -1,20 +1,14 @@
 // @ts-ignore
 import { ethers, network } from "hardhat";
-import getNextSibling from "../dist/actions/getNextSibling";
 
 async function main() {
-  let rollupAddress = "0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44";
   let DAIAddress = "0x6B175474E89094C44Da98b954EedeAC495271d0F";
-
-  let RollupContract = await ethers.getContractFactory("Rollup");
-  let rollup = RollupContract.attach(rollupAddress);
-
-  let [owner, ...others] = await ethers.getSigners();
 
   let ERC20abi = [
     "function approve(address spender, uint256 amount) external returns (bool)",
   ];
 
+  let [owner, ...others] = await ethers.getSigners();
   let UnderlyingContract = new ethers.Contract(DAIAddress, ERC20abi, owner);
 
   let impersonated_accounts = [
@@ -30,39 +24,30 @@ async function main() {
     { address: "0xa3692f4c74E36b984551F329239E7387eEF63f26", amount: "120000" },
   ];
 
-  // artificial delay function
-  const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+  let ExchangeContract = await ethers.getContractFactory("Exchange");
+  let exchange = await ExchangeContract.connect(owner).deploy();
 
-  // deposit DAI from each account
   for await (const account of impersonated_accounts) {
     await network.provider.request({
       method: "hardhat_impersonateAccount",
       params: [account.address],
     });
 
-    let siblings = await getNextSibling();
     let signer = await ethers.provider.getSigner(account.address);
 
     await UnderlyingContract.connect(signer).approve(
-      rollupAddress,
+      exchange.address,
       ethers.constants.MaxUint256
     );
 
-    await rollup
+    await exchange
       .connect(signer)
-      .deposit(siblings, ethers.utils.parseEther(account.amount));
+      .performSwap(ethers.utils.parseEther(account.amount));
 
     await network.provider.request({
       method: "hardhat_stopImpersonatingAccount",
       params: [account.address],
     });
-
-    console.log(
-      `${await signer.getAddress()} registered on Layer 2 successfully | ${
-        account.amount
-      } DAI`
-    );
-    await delay(5000);
   }
 }
 
