@@ -7,6 +7,9 @@
     - [Demo](#demo)
   - [🏃‍♂️ How to run](#️-how-to-run)
   - [⛽️ Gas Comparisons](#️-gas-comparisons)
+    - [Cost Naive](#cost-naive)
+    - [Cost Pessimism](#cost-pessimism)
+    - [Total Gas Consumed in Simulation](#total-gas-consumed-in-simulation)
 
 # 📜 Pessimistic Swaps
 
@@ -63,6 +66,27 @@ Had there been an option for multi pair swap and partial amount, then the user w
 
 ## ⛽️ Gas Comparisons
 
+### Cost Naive
+
+| Description | Gas Used     | Number Required |
+| ----------- | ------------ | --------------- |
+| uniswap     | 150,300 gwei | n               |
+
+### Cost Pessimism
+
+| Description  | Gas Used | Number Required |
+| ------------ | -------- | --------------- |
+| merkle proof |          | n               |
+| root storage |          | n               |
+| Total        | 76,000   | n               |
+
+Which is an 150300 / 76000 = ~2x improvement
+
+### Total Gas Consumed in Simulation
+
+Total gas = (Gas spent by User + Gas spent by operator Operator)
+Gas consumed by operator basically means the gas spent by the operator to execute the swap function after all the users have deposited their balances.
+
 The application runs on a hardhat node with mainnet forking and impersonates 10 accounts with varying DAI balances and varying swap amounts.
 
 | Type           | Gas Used (only swap) |
@@ -70,7 +94,7 @@ The application runs on a hardhat node with mainnet forking and impersonates 10 
 | Native L1 Swap | 595,786 gwei         |
 | Rollup Swap    | 1,503,682 gwei       |
 
-We can clearly see the huge difference between native Layer 1 and Layer 2 swap. There is almost 2.5x improvement on the gas consumed.
+We can clearly see the huge difference between native Layer 1 and Layer 2 swap. There is almost 2.5x improvement on the total gas consumed.
 
 | Type           | Gas Used (deposit + swap) |
 | -------------- | ------------------------- |
