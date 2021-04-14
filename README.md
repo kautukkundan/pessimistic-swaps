@@ -67,14 +67,14 @@ The application runs on a hardhat node with mainnet forking and impersonates 10 
 
 | Type           | Gas Used (only swap) |
 | -------------- | -------------------- |
-| Native L1 Swap | 595786 gwei          |
-| Rollup Swap    | 1503682 gwei         |
+| Native L1 Swap | 595,786 gwei         |
+| Rollup Swap    | 1,503,682 gwei       |
 
 We can clearly see the huge difference between native Layer 1 and Layer 2 swap. There is almost 2.5x improvement on the gas consumed.
 
 | Type           | Gas Used (deposit + swap) |
 | -------------- | ------------------------- |
-| Native L1 Swap | 1409474 gwei              |
-| Rollup Swap    | 1503682 gwei              |
+| Native L1 Swap | 1,409,474 gwei            |
+| Rollup Swap    | 1,503,682 gwei            |
 
 If we try to include the cost for deposit, which is actually just a one time upfront cost. The user can make a deposit 1 time and then opt to do any number of swaps with any arbitrary amount at a constant price (currently the functionality is not implemented). We can still see that there is atleast a 10% improvement in gas price as compared to native Layer 1 swap and this percentage will definitely increase as the size of batch increases. Also note that the code is not very optimized for gas.
