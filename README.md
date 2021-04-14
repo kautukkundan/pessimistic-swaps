@@ -74,11 +74,11 @@ Had there been an option for multi pair swap and partial amount, then the user w
 
 ### Cost Pessimism
 
-| Description  | Gas Used | Number Required |
-| ------------ | -------- | --------------- |
-| merkle proof |          | n               |
-| root storage |          | n               |
-| Total        | 76,000   | n               |
+| Description  | Gas Used    | Number Required |
+| ------------ | ----------- | --------------- |
+| merkle proof |             | n               |
+| root storage |             | n               |
+| Total        | 76,000 gwei | n               |
 
 Which is an 150300 / 76000 = ~2x improvement
 
