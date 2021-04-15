@@ -17,7 +17,7 @@ Uniswap token swap via Layer 2 pessimistic rollup
 
 ## 📝 Introduction
 
-Uniswap token swaps are expensive and takes around ~150 gas per transaction. This project aims to solve this issue by batching users who wish to perform same token swaps. Instead of each user doing individual swap, a bunch of users are grouped together, their tokens are added together, the total sum of tokens are swapped in a single transaction and finally the swapped token is distributed to the users based on their initial share.
+Uniswap token swaps are expensive and takes around ~150K gas per transaction. This project aims to solve this issue by batching users who wish to perform same token swaps. Instead of each user doing individual swap, a bunch of users are grouped together, their tokens are added together, the total sum of tokens are swapped in a single transaction and finally the swapped token is distributed to the users based on their initial share.
 
 This is acheived by using a layer 2 "pessimistic" rollup which acts as a "super wallet" for the users. The rollup keeps track of the individual deposits and performs swap when a sufficient number of users are available. By doing batched transaction with batch size N, the total gas required from swap is reduced from N\*x to just x.
 
@@ -46,7 +46,7 @@ How it works:
 ### Architecture and Security
 
 The project only focusses on a single token pair, that is, all users deposit DAI and get ETH. Moreover entire 100% of the deposited tokens are converted. Due to these reason, signing of transaction is not required as all the tokens will be converted and the deposit of the token by user is considered as a consent.
-Had there been an option for multi pair swap and partial amount, then the user would have been required to sign the transaction for X token and N% of totak=l.
+Had there been an option for multi pair swap and partial amount, then the user would have been required to sign the transaction for X token and N% of total amoount.
 
 ### Demo
 
